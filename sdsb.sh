@@ -25,9 +25,9 @@ fi
 
 
 echo
-echo "*******************************"
-echo "* SuperDuperSimpleBackup v0.1 *"
-echo "*******************************"
+echo "**************************************"
+echo "* SDSB - SuperDuperSimpleBackup v0.1 *"
+echo "**************************************"
 
 echo
 echo "*** Configuration ***"
