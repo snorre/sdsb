@@ -5,11 +5,18 @@ set -e # stop on first error
 #
 # Configuration
 #
-local_data_root="/path/to/data/that/needs/backing/up"
-remote_server="remote.server.com"
-remote_data_root="/path/to/backed/up/data"
-remote_snapshot_root="/path/to/btrfs/snapshots"
-bandwidth_limit_KBs=1000
+# Create a new file names "sdsb.config.sh" next to this script.
+# Add the following content:
+#
+# local_data_root="/path/to/data/that/needs/backing/up"
+# remote_server="remote.server.com"
+# remote_data_root="/path/to/backed/up/data"
+# remote_snapshot_root="/path/to/btrfs/snapshots"
+# bandwidth_limit_KBs=1000
+#
+
+. sdsb.config.sh
+
 
 echo
 echo "*******************************"
