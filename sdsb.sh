@@ -1,6 +1,12 @@
 #!/bin/bash
 
+echo
+echo "**************************************"
+echo "* SDSB - SuperDuperSimpleBackup v0.1 *"
+echo "**************************************"
+
 set -e # stop on first error
+
 
 #
 # Configuration
@@ -22,12 +28,6 @@ then
 fi
 
 . sdsb.config.sh
-
-
-echo
-echo "**************************************"
-echo "* SDSB - SuperDuperSimpleBackup v0.1 *"
-echo "**************************************"
 
 echo
 echo "*** Configuration ***"
