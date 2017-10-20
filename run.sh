@@ -5,15 +5,21 @@ set -e # stop on first error
 #
 # Configuration
 #
-# Create a new file names "sdsb.config.sh" next to this script.
-# Add the following content:
-#
-# local_data_root="/path/to/data/that/needs/backing/up"
-# remote_server="remote.server.com"
-# remote_data_root="/path/to/backed/up/data"
-# remote_snapshot_root="/path/to/btrfs/snapshots"
-# bandwidth_limit_KBs=1000
-#
+if test ! -r sdsb.config.sh;
+then
+	echo ""
+	echo "Configuration file is missing."
+	echo "Create a file called 'sdsb.config.sh' next to this script that contains:"
+	echo ""
+	echo 'local_data_root="/path/to/data/that/needs/backing/up"'
+	echo 'remote_server="remote.server.com"'
+	echo 'remote_data_root="/path/to/backed/up/data"'
+	echo 'remote_snapshot_root="/path/to/btrfs/snapshots"'
+	echo 'bandwidth_limit_KBs=1000'
+	echo ""
+	
+	exit 1
+fi
 
 . sdsb.config.sh
 
