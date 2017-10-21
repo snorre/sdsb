@@ -1,3 +1,4 @@
 sdsb.config.sh
 .vs
 rsync_output_*
+sdsb.log
