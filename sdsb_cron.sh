@@ -1,6 +1,6 @@
 #!/bin/bash
 
-exec 3<<<"" # Create a deleted temporary fil: /dev/fd/3
+exec 3<<<"" # Create a deleted temporary file: /dev/fd/3
 
 . sdsb_lib.sh
 
