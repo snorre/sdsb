@@ -7,6 +7,11 @@ echo "**************************************"
 
 set -e # stop on first error
 
+if [ -n "$SDSB_PATH" ];
+then
+	cd $SDSB_PATH
+fi
+
 . sdsb_lib.sh
 
 read_config
@@ -21,7 +26,7 @@ check_remote_dir $remote_snapshot_root
 
 echo
 echo "*** Uploading data ***"
-rsync \
+/usr/bin/rsync \
 	--archive \
 	--verbose \
 	--copy-links \
@@ -37,10 +42,10 @@ echo
 echo "*** Creating remote snapshot ***"
 subpath="$(date +%Y/%m/%d)"
 snapshot_name="$(date +%H%M%S)"
-ssh $remote_server \
+/usr/bin/ssh $remote_server \
 	sudo mkdir -p $remote_snapshot_root/$subpath
 
-ssh $remote_server \
+/usr/bin/ssh $remote_server \
 	sudo \
 	btrfs subvolume snapshot -r \
 	$remote_data_root \
@@ -49,7 +54,7 @@ ssh $remote_server \
 
 echo
 echo "*** Listing remote snapshots ***"
-ssh $remote_server \
+/usr/bin/ssh $remote_server \
 	sudo \
 	btrfs subvolume list $remote_snapshot_root
 
@@ -57,10 +62,10 @@ ssh $remote_server \
 echo
 echo "*** Disk usage ***"
 echo "Backup root: "
-ssh $remote_server\
+/usr/bin/ssh $remote_server\
 	df -h $remote_data_root
 echo "Snapshot root: "
-ssh $remote_server\
+/usr/bin/ssh $remote_server\
 	df -h $remote_snapshot_root
 
 

@@ -36,13 +36,13 @@ function print_config {
 function check_remote_dir {
 	echo -n "Checking remote $1.. "
 
-	if ssh $remote_server test ! -d $1;
+	if /usr/bin/ssh $remote_server test ! -d $1;
 	then
 		echo "Missing, exiting"
 		exit 1
 	fi
 
-	if ssh $remote_server test ! -w $1;
+	if /usr/bin/ssh $remote_server test ! -w $1;
 	then
 		echo "Not writable, exiting."
 		exit 1
@@ -64,7 +64,7 @@ function check_local_dir {
 }
 
 function send_notification {
-	local file_base64=$(base64 -w 0 $1)
+	local file_base64=$(/usr/bin/base64 -w 0 $1)
 	local post_data="
 	{
 		\"personalizations\": [
@@ -95,7 +95,7 @@ function send_notification {
 		]
 	}"
 
-	curl \
+	/usr/bin/curl \
 		-X "POST" \
 		"https://api.sendgrid.com/v3/mail/send" \
 		-H "Authorization: Bearer $sendgrid_api_key" \
