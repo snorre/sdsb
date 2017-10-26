@@ -1,0 +1,29 @@
+#[Unit]
+#Description=Docker Container SDSB
+#Requires=docker.service
+#After=docker.service
+
+#[Service]
+#ExecStart=
+
+/usr/bin/docker run \
+  --rm \
+  --name sdsb \
+  --network host \
+  -e "REMOTE_SERVER=bm-dev.entotre.org" \
+  -e "REMOTE_DATA_ROOT=/data/backup_dev/data"\
+  -e "REMOTE_SNAPSHOT_ROOT=/data/backup_dev/snapshots" \
+  -e "BANDWIDTH_LIMIT_KBS=1000" \
+  -e "SENDGRID_API_KEY=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" \
+  -e "NOTIFICATION_EMAIL=snorre.visnes+sdsb@gmail.com" \
+  -e "SSH_USERNAME=snorre" \
+  -v /home/snorre/dev/sdsb_testdata:/data-to-backup \
+  -v /home/snorre/.ssh:/root/.ssh \
+  sdsb:dockerfile
+
+
+#ExecStopPost=/usr/bin/docker rm -f sdsb
+
+#[Install]
+#WantedBy=multi-user.target
+

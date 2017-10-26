@@ -1,5 +1,5 @@
 function read_config {
-	local config_file="sdsb_config.sh"
+	local config_file="$SDSB_PATH/sdsb_config.sh"
 	if test ! -r $config_file;
 	then
 		echo ""
@@ -11,8 +11,9 @@ function read_config {
 		echo 'remote_data_root="/path/to/backed/up/data"'
 		echo 'remote_snapshot_root="/path/to/btrfs/snapshots"'
 		echo 'bandwidth_limit_KBs=1000'
-		echo 'sendgrid_api_key="MY_API_KEY'
+		echo 'sendgrid_api_key="MY_API_KEY"'
 		echo 'notification_email="me@some.domain"'
+		echo 'ssh_username="sshuser"'
 		echo ""
 
 		exit 1
@@ -31,18 +32,19 @@ function print_config {
 	echo "Bandwidth limit KB/s: $bandwidth_limit_KBs"
 	echo "Sendgrid API Key: $(echo $sendgrid_api_key | head -c 10)..."
 	echo "Notification email: $notification_email"
+	echo "SSH username: $ssh_username"
 }
 
 function check_remote_dir {
 	echo -n "Checking remote $1.. "
 
-	if /usr/bin/ssh $remote_server test ! -d $1;
+	if /usr/bin/ssh $ssh_username@$remote_server test ! -d $1;
 	then
 		echo "Missing, exiting"
 		exit 1
 	fi
 
-	if /usr/bin/ssh $remote_server test ! -w $1;
+	if /usr/bin/ssh $ssh_username@$remote_server test ! -w $1;
 	then
 		echo "Not writable, exiting."
 		exit 1

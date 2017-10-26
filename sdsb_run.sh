@@ -7,12 +7,13 @@ echo "**************************************"
 
 set -e # stop on first error
 
-if [ -n "$SDSB_PATH" ];
+if [ -z "$SDSB_PATH" ];
 then
-	cd $SDSB_PATH
+	echo "Setting SDSB_PATH to current directory"
+	SDSB_PATH="."
 fi
 
-. sdsb_lib.sh
+. $SDSB_PATH/sdsb_lib.sh
 
 read_config
 print_config
@@ -35,17 +36,18 @@ echo "*** Uploading data ***"
 	--delete \
 	--force \
 	-e ssh \
-	$local_data_root/ $remote_server:$remote_data_root
+	$local_data_root/ \
+	$ssh_username@$remote_server:$remote_data_root
 
 
 echo
 echo "*** Creating remote snapshot ***"
 subpath="$(date +%Y/%m/%d)"
 snapshot_name="$(date +%H%M%S)"
-/usr/bin/ssh $remote_server \
+/usr/bin/ssh $ssh_username@$remote_server \
 	sudo mkdir -p $remote_snapshot_root/$subpath
 
-/usr/bin/ssh $remote_server \
+/usr/bin/ssh $ssh_username@$remote_server \
 	sudo \
 	btrfs subvolume snapshot -r \
 	$remote_data_root \
@@ -54,7 +56,7 @@ snapshot_name="$(date +%H%M%S)"
 
 echo
 echo "*** Listing remote snapshots ***"
-/usr/bin/ssh $remote_server \
+/usr/bin/ssh $ssh_username@$remote_server \
 	sudo \
 	btrfs subvolume list $remote_snapshot_root
 
@@ -62,10 +64,10 @@ echo "*** Listing remote snapshots ***"
 echo
 echo "*** Disk usage ***"
 echo "Backup root: "
-/usr/bin/ssh $remote_server\
+/usr/bin/ssh $ssh_username@$remote_server\
 	df -h $remote_data_root
 echo "Snapshot root: "
-/usr/bin/ssh $remote_server\
+/usr/bin/ssh $ssh_username@$remote_server\
 	df -h $remote_snapshot_root
 
 
