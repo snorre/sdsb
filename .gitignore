@@ -1,4 +1,5 @@
 sdsb_config.sh
 sdsb.log
-
+test_sdsb.sh
+*.swp
 .vs

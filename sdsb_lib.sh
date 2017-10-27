@@ -1,50 +1,16 @@
-function read_config {
-	local config_file="$SDSB_PATH/sdsb_config.sh"
-	if test ! -r $config_file;
-	then
-		echo ""
-		echo "Configuration file is missing."
-		echo "Create a file called '$config_file' next to this script that contains:"
-		echo ""
-		echo 'local_data_root="/path/to/data/that/needs/backing/up"'
-		echo 'remote_server="remote.server.com"'
-		echo 'remote_data_root="/path/to/backed/up/data"'
-		echo 'remote_snapshot_root="/path/to/btrfs/snapshots"'
-		echo 'bandwidth_limit_KBs=1000'
-		echo 'sendgrid_api_key="MY_API_KEY"'
-		echo 'notification_email="me@some.domain"'
-		echo 'ssh_username="sshuser"'
-		echo ""
-
-		exit 1
-	fi
-
-	. $config_file
-}
-
-function print_config {
-	echo
-	echo "*** Configuration ***"
-	echo "Local folder: $local_data_root"
-	echo "Remote server: $remote_server"
-	echo "Remote backup root: $remote_data_root"
-	echo "Remote snapshot root: $remote_snapshot_root"
-	echo "Bandwidth limit KB/s: $bandwidth_limit_KBs"
-	echo "Sendgrid API Key: $(echo $sendgrid_api_key | head -c 10)..."
-	echo "Notification email: $notification_email"
-	echo "SSH username: $ssh_username"
-}
+# TODO
+run_on_remote="ssh $SSH_USERNAME@$REMOTE_SERVER"
 
 function check_remote_dir {
 	echo -n "Checking remote $1.. "
 
-	if /usr/bin/ssh $ssh_username@$remote_server test ! -d $1;
+	if ssh $SSH_USERNAME@$REMOTE_SERVER test ! -d $1;
 	then
 		echo "Missing, exiting"
 		exit 1
 	fi
 
-	if /usr/bin/ssh $ssh_username@$remote_server test ! -w $1;
+	if ssh $SSH_USERNAME@$REMOTE_SERVER test ! -w $1;
 	then
 		echo "Not writable, exiting."
 		exit 1
@@ -66,14 +32,14 @@ function check_local_dir {
 }
 
 function send_notification {
-	local file_base64=$(/usr/bin/base64 -w 0 $1)
+	local file_base64=$(base64 -w 0 $1)
 	local post_data="
 	{
 		\"personalizations\": [
 			{
 				\"to\": [
 	        			{
-						\"email\": \"$notification_email\"
+						\"email\": \"$NOTIFICATION_EMAIL\"
 	 				}
 				],
 				\"subject\": \"SDSB backup report\"
@@ -97,10 +63,10 @@ function send_notification {
 		]
 	}"
 
-	/usr/bin/curl \
+	curl \
 		-X "POST" \
 		"https://api.sendgrid.com/v3/mail/send" \
-		-H "Authorization: Bearer $sendgrid_api_key" \
+		-H "Authorization: Bearer $SENDGRID_API_KEY" \
 		-H "Content-Type: application/json" \
 		-d "$post_data"
 }
