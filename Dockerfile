@@ -2,7 +2,6 @@ FROM ubuntu:latest
 MAINTAINER snorre.visnes@gmail.com
 
 RUN mkdir /sdsb
-ADD sdsb_lib.sh /sdsb
 ADD sdsb_run.sh /sdsb
 ADD sdsb_run_and_notify.sh /sdsb
 RUN chmod 0755 /sdsb/*.sh
