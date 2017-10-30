@@ -10,6 +10,14 @@ set -e # stop on first error
 . $SDSB_PATH/sdsb_lib.sh
 
 echo
+echo "*** Updating SSH configuration ***"
+mkdir /root/.ssh
+echo $SSH_PRIVATE_KEY > /root/.ssh/id_rsa
+echo $SSH_PUBLIC_KEY > /root/.ssh/id_rsa.pub
+echo $SSH_HOST_KEY > /root/.ssh/known_hosts
+chmod 600 /root/.ssh/*
+
+echo
 echo "*** Checking directories ***"
 check_local_dir $DIRECTORY_TO_BACKUP
 check_remote_dir $REMOTE_DATA_ROOT
