@@ -42,6 +42,7 @@ echo "**************************************"
 
 set -e # stop on first error
 
+
 echo
 echo "*** Updating SSH configuration ***"
 mkdir /root/.ssh
@@ -49,6 +50,7 @@ echo $SSH_PRIVATE_KEY > /root/.ssh/id_rsa
 echo $SSH_PUBLIC_KEY > /root/.ssh/id_rsa.pub
 echo $SSH_HOST_KEY > /root/.ssh/known_hosts
 chmod 600 /root/.ssh/*
+
 
 echo
 echo "*** Checking directories ***"
