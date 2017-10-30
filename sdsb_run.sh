@@ -1,13 +1,46 @@
 #!/bin/bash
 
+function run_on_remote {
+	ssh $SSH_USERNAME@$REMOTE_SERVER $@
+}
+
+function check_remote_dir {
+	echo -n "Checking remote $1.. "
+
+	if run_on_remote test ! -d $1;
+	then
+		echo "Missing, exiting"
+		exit 1
+	fi
+
+	if run_on_remote test ! -w $1;
+	then
+		echo "Not writable, exiting."
+		exit 1
+	fi
+
+	echo "Ok"
+}
+
+function check_local_dir {
+	echo -n "Checking local $1.. "
+
+	if test ! -d $1;
+	then
+		echo "Missing, exiting"
+		exit 1
+	fi
+
+	echo "Ok"
+}
+
+
 echo
 echo "**************************************"
 echo "* SDSB - SuperDuperSimpleBackup v0.1 *"
 echo "**************************************"
 
 set -e # stop on first error
-
-. $SDSB_PATH/sdsb_lib.sh
 
 echo
 echo "*** Checking directories ***"
@@ -35,10 +68,10 @@ echo
 echo "*** Creating remote snapshot ***"
 subpath="$(date +%Y/%m/%d)"
 snapshot_name="$(date +%H%M%S)"
-ssh $SSH_USERNAME@$REMOTE_SERVER \
+run_on_remote \
 	sudo mkdir -p $REMOTE_SNAPSHOT_ROOT/$subpath
 
-ssh $SSH_USERNAME@$REMOTE_SERVER \
+run_on_remote \
 	sudo \
 	btrfs subvolume snapshot -r \
 	$REMOTE_DATA_ROOT \
@@ -47,14 +80,14 @@ ssh $SSH_USERNAME@$REMOTE_SERVER \
 
 echo
 echo "*** Listing remote snapshots ***"
-ssh $SSH_USERNAME@$REMOTE_SERVER \
+run_on_remote \
 	sudo \
 	btrfs subvolume list $REMOTE_SNAPSHOT_ROOT
 
 
 echo
 echo "*** Disk usage ***"
-ssh $SSH_USERNAME@$REMOTE_SERVER df -h
+run_on_remote df -h
 
 
 echo
