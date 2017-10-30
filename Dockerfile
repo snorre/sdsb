@@ -21,7 +21,7 @@ ENV SDSB_PATH="/sdsb"
 ENV DIRECTORY_TO_BACKUP="/data-to-backup""
 
 RUN apt-get -qq update
-RUN apt-get -y -qq install curl rsync ssh
+RUN apt-get -y -qq install curl rsync ssh nano
 
 CMD /sdsb/sdsb_run_and_notify.sh
 #CMD /sdsb/sdsb_run.sh
