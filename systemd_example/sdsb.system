@@ -1,12 +1,10 @@
-#[Unit]
-#Description=Docker Container SDSB
-#Requires=docker.service
-#After=docker.service
+[Unit]
+Description=Docker Container SDSB
+Requires=docker.service
+After=docker.service
 
-#[Service]
-#ExecStart=
-
-/usr/bin/docker run \
+[Service]
+ExecStart=/usr/bin/docker run \
   --rm \
   --name sdsb \
   --network host \
@@ -21,9 +19,8 @@
   -v <TODO>:/root/.ssh \
   sdsb:dockerfile
 
+ExecStopPost=/usr/bin/docker rm -f sdsb
 
-#ExecStopPost=/usr/bin/docker rm -f sdsb
-
-#[Install]
-#WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
 
