@@ -1,0 +1,30 @@
+[Unit]
+Description=Docker Container SDSB
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker run \
+  --rm \
+  --name sdsb \
+  --network host \
+  -e "REMOTE_SERVER=backupserver.domain.com" \
+  -e "REMOTE_DATA_ROOT=/path/to/backup/data"\
+  -e "REMOTE_SNAPSHOT_ROOT=/path/to/backup/snapshots" \
+  -e "BANDWIDTH_LIMIT_KBS=1000" \
+  -e "SENDGRID_API_KEY=API_KEY_THAT_HAS_MAIL_SEND_PERMISSIONS" \
+  -e "NOTIFICATION_EMAIL=gets.an.email.every.time.sdsb.runs@gmail.com" \
+  -e "SSH_USERNAME=username_on_backupserver" \
+  -v /data/to/backup/on/local/host:/data-to-backup \
+  -v /home/local_user/.ssh:/root/.ssh \
+  snorre/sdsb:latest
+
+# First volume is the folder that contains data to be backed up. Symlinks are followed. 
+# Must be mounted on /data-to-backup in container
+
+# Second volume is the .ssh folder for the local user. Must contain the key used to log in to remote server
+# Must be mounted on /root/.ssh
+
+[Install]
+WantedBy=multi-user.target
