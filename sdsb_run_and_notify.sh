@@ -37,7 +37,7 @@ function send_notification {
 		"https://api.sendgrid.com/v3/mail/send" \
 		-H "Authorization: Bearer $SENDGRID_API_KEY" \
 		-H "Content-Type: application/json" \
-		-d "$post_data"
+		-d @<(echo $post_data)
 }
 
 

@@ -52,6 +52,24 @@ check_remote_dir $REMOTE_SNAPSHOT_ROOT
 
 echo
 echo "*** Uploading data ***"
+
+dry_run_flag=""
+if [ "$DRY_RUN" == "1" ];
+then
+        dry_run_flag="--dry-run"
+        echo ""
+        echo ""
+        echo "# # # # # # # # # # # # # # # # # # # # # # # # #"
+        echo "# # # # # # # # # # # # # # # # # # # # # # # # #"
+        echo "# # #                                       # # #"
+        echo "# # #   DRY RUN, no data will be uploaded   # # #"
+        echo "# # #                                       # # #"
+        echo "# # # # # # # # # # # # # # # # # # # # # # # # #"
+        echo "# # # # # # # # # # # # # # # # # # # # # # # # #"
+        echo ""
+        echo ""
+fi
+
 rsync \
 	--archive \
 	--verbose \
@@ -59,7 +77,9 @@ rsync \
 	--bwlimit=$BANDWIDTH_LIMIT_KBS \
 	--human-readable \
 	--delete \
+	--delete-after \
 	--force \
+	$dry_run_flag \
 	-e ssh \
 	$DIRECTORY_TO_BACKUP/ \
 	$SSH_USERNAME@$REMOTE_SERVER:$REMOTE_DATA_ROOT
