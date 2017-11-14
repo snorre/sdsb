@@ -6,7 +6,8 @@ Use at your own risk.
 
 ## TODO
 * Dry-run env variable
-* Avoid mount --bind to configure source? Synlinks dont work with Docker..
+* Ability to append large logfiles when notifying.
+* Avoid mount --bind to configure source? Symlinks dont work with Docker..
 * Documentation
 * Avoid taking a new snapshot if no files are transferred
 * Reduce number of snapshots kept for a long time
