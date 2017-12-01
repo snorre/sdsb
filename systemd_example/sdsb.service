@@ -21,7 +21,7 @@ ExecStart=/usr/bin/docker run \
   -e "NOTIFICATION_EMAIL=gets.an.email.every.time.sdsb.runs@gmail.com" \
   -e "SSH_USERNAME=username_on_backupserver" \
   -e "DRY_RUN=0" \
-  -v /home/local_user/.ssh:/root/.ssh \
+  -v /home/local_user/.ssh:/root/.ssh:ro \
   
   -v /data/to/backup/on/local/host/folder1:/data-to-backup/folder1:ro \
   -v /data/to/backup/on/local/host/folder2:/data-to-backup/folder2:ro \
